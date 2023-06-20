@@ -37,6 +37,16 @@ async function run() {
             res.send(result);
         });
 
+        app.get('/toys/myToys', async (req, res) => {
+            console.log(req.query.email);
+            let query = {};
+            if(req.query?.email){
+                query = {email: req.query.email}
+            }
+            const result = await toyCollection.find(query).sort({ price: 1 }).toArray();
+            res.send(result);
+        });
+
 
         app.get('/toys/:id', async (req, res) => {
             const id = req.params.id;
@@ -44,7 +54,7 @@ async function run() {
             const query = { _id: new ObjectId(id) };
             const result = await toyCollection.findOne(query);
             res.send(result);
-        })
+        });
 
 
         app.post('/toys', async (req, res) => {
