@@ -29,7 +29,7 @@ async function run() {
 
 
         const toyCollection = client.db("toyDB").collection("toys");
-        
+
 
         app.get('/toys', async (req, res) => {
             const cursor = toyCollection.find().limit(20);
@@ -38,35 +38,37 @@ async function run() {
         });
 
         app.get('/toys/myToys', async (req, res) => {
-            console.log(req.query.email);
             let query = {};
-            if(req.query?.email){
-                query = {email: req.query.email}
+            if (req.query?.email) {
+                query = { email: req.query.email }
             }
             const result = await toyCollection.find(query).toArray();
             res.send(result);
         });
 
-        app.get('/toys/myToys/descending', async (req, res) => {
-            console.log(req.query.email);
-            let query = {};
-            if(req.query?.email){
-                query = {email: req.query.email}
-            }
-            const result = await toyCollection.find(query).sort({price: -1}).toArray();
-            res.send(result);
-        });
-
         app.get('/toys/myToys/ascending', async (req, res) => {
-            console.log(req.query.email);
             let query = {};
-            if(req.query?.email){
-                query = {email: req.query.email}
+            if (req.query?.email) {
+                query = { email: req.query.email }
             }
-            const result = await toyCollection.find(query).sort({price: 1}).toArray();
+            const options = {
+                sort: { price: 1 },
+            }
+            const result = await toyCollection.find(query, options).toArray();
             res.send(result);
         });
 
+        app.get('/toys/myToys/descending', async (req, res) => {
+            let query = {};
+            if (req.query?.email) {
+                query = { email: req.query.email }
+            }
+            const options = {
+                sort: { price: -1 },
+            }
+            const result = await toyCollection.find(query, options).toArray();
+            res.send(result);
+        });
 
         app.get('/toys/:id', async (req, res) => {
             const id = req.params.id;
