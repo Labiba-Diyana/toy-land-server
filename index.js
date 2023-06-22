@@ -83,6 +83,15 @@ async function run() {
             const newToy = req.body;
             const result = await toyCollection.insertOne(newToy);
             res.send(result);
+        });
+
+
+        app.delete('/toys/myToys/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) };
+            const result = await toyCollection.deleteOne(query);
+            res.send(result);
+
         })
 
 
