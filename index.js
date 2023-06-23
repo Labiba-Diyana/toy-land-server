@@ -28,9 +28,26 @@ async function run() {
         await client.connect();
 
 
+        const tabsToyCollection = client.db("toyDB").collection("tabsToys");
         const toyCollection = client.db("toyDB").collection("toys");
 
+        
+        // tabsToys routes
+        app.get('/tabs', async (req, res) => {
+            const cursor = tabsToyCollection.find();
+            const result = await cursor.toArray();
+            res.send(result);
+        });
 
+        app.get('/tabs/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) };
+            const result = await tabsToyCollection.findOne(query);
+            res.send(result);
+        });
+
+
+        // toys routes
         app.get('/toys', async (req, res) => {
             const cursor = toyCollection.find().limit(20);
             const result = await cursor.toArray();
